@@ -1,0 +1,108 @@
+﻿@model EventEaseApplication.Models.Venue
+
+@{
+    ViewData["Title"] = "Venue Details";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h1 class="mb-0 fw-bold">Venue Details</h1>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a asp-action="Edit" asp-route-id="@Model?.VenueID"
+                       class="btn btn-primary px-4 rounded-pill">
+                        <i class="fas fa-edit me-2"></i>Edit Venue
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-light px-4 rounded-pill">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+
+            <div class="card bg-deep-blue border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-transparent border-bottom border-medium-blue py-4 px-4">
+                    <h4 class="mb-0 fw-semibold text-highlight">
+                        <i class="fas fa-building me-2"></i>
+                        @Model?.VenueName
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="row g-4">
+                        <!-- Image (prominent at top) -->
+                        <div class="col-12 mb-4">
+                            @if (!string.IsNullOrWhiteSpace(Model?.ImageURL))
+                            {
+                                <img src="@Model.ImageURL"
+                                     alt="@Model.VenueName"
+                                     class="img-fluid rounded shadow"
+                                     style="max-height: 400px; object-fit: cover; width: 100%;"
+                                     onerror="this.src='https://via.placeholder.com/900x400/1b263b/778da9?text=Image+Not+Found';">
+                            }
+                            else
+                            {
+                                <div class="bg-medium-blue rounded d-flex align-items-center justify-content-center"
+                                     style="height: 300px;">
+                                    <i class="fas fa-image fa-5x text-light-blue opacity-50"></i>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Details -->
+                        <div class="col-sm-3 fw-semibold text-light-blue">
+                            @Html.DisplayNameFor(model => model.VenueName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.VenueName)
+                        </div>
+
+                        <div class="col-sm-3 fw-semibold text-light-blue">
+                            @Html.DisplayNameFor(model => model.Location)
+                        </div>
+                        <div class="col-sm-9">
+                            <i class="fas fa-map-marker-alt me-2 text-highlight"></i>
+                            @Html.DisplayFor(model => model.Location)
+                        </div>
+
+                        <div class="col-sm-3 fw-semibold text-light-blue">
+                            @Html.DisplayNameFor(model => model.Capacity)
+                        </div>
+                        <div class="col-sm-9">
+                            <i class="fas fa-users me-2 text-highlight"></i>
+                            @Html.DisplayFor(model => model.Capacity) people
+                        </div>
+
+                        <div class="col-sm-3 fw-semibold text-light-blue">
+                            @Html.DisplayNameFor(model => model.VenueType)
+                        </div>
+                        <div class="col-sm-9">
+                            <span class="badge bg-medium-blue px-3 py-2 fs-6">
+                                @(Model?.VenueType?.VenueTitle ?? "Not specified")
+                            </span>
+                        </div>
+
+                        <div class="col-sm-3 fw-semibold text-light-blue">
+                            Image URL
+                        </div>
+                        <div class="col-sm-9">
+                            @if (!string.IsNullOrWhiteSpace(Model?.ImageURL))
+                            {
+                                <a href="@Model.ImageURL" target="_blank" class="text-highlight">
+                                    @Model.ImageURL
+                                    <i class="fas fa-external-link-alt ms-2 small"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No image provided</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

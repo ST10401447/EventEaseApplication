@@ -1,0 +1,96 @@
+﻿@model EventEaseApplication.Models.Venue
+
+@{
+    ViewData["Title"] = "Create Venue";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h1 class="mb-0 fw-bold">Create New Venue</h1>
+                <a asp-action="Index" class="btn btn-outline-light px-4 rounded-pill">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Venues
+                </a>
+            </div>
+
+            <div class="card bg-deep-blue border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-transparent border-bottom border-medium-blue py-4 px-4">
+                    <h4 class="mb-0 fw-semibold text-highlight">
+                        <i class="fas fa-building me-2"></i>
+                        Add Venue Details
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4 alert alert-danger" role="alert"></div>
+
+                        <!-- Venue Name -->
+                        <div class="mb-4">
+                            <label asp-for="VenueName" class="form-label fw-semibold text-light-blue"></label>
+                            <input asp-for="VenueName" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
+                                   placeholder="e.g. Skyline Rooftop Lounge" />
+                            <span asp-validation-for="VenueName" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <!-- Location -->
+                        <div class="mb-4">
+                            <label asp-for="Location" class="form-label fw-semibold text-light-blue"></label>
+                            <input asp-for="Location" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
+                                   placeholder="e.g. Sandton, Johannesburg" />
+                            <span asp-validation-for="Location" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <!-- Capacity -->
+                        <div class="mb-4">
+                            <label asp-for="Capacity" class="form-label fw-semibold text-light-blue"></label>
+                            <input asp-for="Capacity" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
+                                   type="number" min="1" placeholder="Maximum number of guests" />
+                            <span asp-validation-for="Capacity" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <!-- Image URL -->
+                        <div class="mb-4">
+                            <label asp-for="ImageURL" class="form-label fw-semibold text-light-blue"></label>
+                            <input asp-for="ImageURL" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
+                                   placeholder="https://example.com/venue-image.jpg" />
+                            <small class="form-text text-light-blue mt-1 d-block">
+                                Provide a direct link to a high-quality image of the venue
+                            </small>
+                            <span asp-validation-for="ImageURL" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <!-- Venue Type -->
+                        <div class="mb-5">
+                            <label asp-for="VenueTypeID" class="form-label fw-semibold text-light-blue"></label>
+                            <select asp-for="VenueTypeID" class="form-select form-select-lg bg-dark-blue border-medium-blue text-white"
+                                    asp-items="ViewBag.VenueTypeID">
+                                <option value="">-- Select Venue Type --</option>
+                            </select>
+                            <span asp-validation-for="VenueTypeID" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-3 flex-wrap">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill">
+                                <i class="fas fa-plus-circle me-2"></i>Create Venue
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-light btn-lg px-5 rounded-pill">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

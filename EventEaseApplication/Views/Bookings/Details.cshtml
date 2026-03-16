@@ -1,0 +1,128 @@
+﻿@model EventEaseApplication.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <h1 class="mb-0 fw-bold">Booking Details</h1>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a asp-action="Edit" asp-route-id="@Model?.BookingID"
+                       class="btn btn-primary px-4 rounded-pill">
+                        <i class="fas fa-edit me-2"></i>Edit Booking
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-light px-4 rounded-pill">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+
+            <div class="card bg-deep-blue border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-transparent border-bottom border-medium-blue py-4 px-4">
+                    <h4 class="mb-0 fw-semibold text-highlight">
+                        <i class="fas fa-ticket-alt me-2"></i>
+                        Booking #@Model?.BookingID
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <dl class="row g-4 mb-0">
+                        <dt class="col-sm-3 fw-semibold text-light-blue">
+                            Start Date
+                        </dt>
+                        <dd class="col-sm-9">
+                            @if (Model?.StartDate != default)
+                            {
+                                <strong>@Model.StartDate.ToString("dddd, dd MMMM yyyy")</strong>
+                                <span class="ms-3 text-light-blue">at @Model.StartDate.ToString("HH:mm")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3 fw-semibold text-light-blue">
+                            End Date
+                        </dt>
+                        <dd class="col-sm-9">
+                            @if (Model?.EndDate != default)
+                            {
+                                <strong>@Model.EndDate.ToString("dddd, dd MMMM yyyy")</strong>
+                                <span class="ms-3 text-light-blue">at @Model.EndDate.ToString("HH:mm")</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">—</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3 fw-semibold text-light-blue">
+                            Event
+                        </dt>
+                        <dd class="col-sm-9">
+                            <div class="bg-dark-blue p-3 rounded border border-medium-blue">
+                                @if (!string.IsNullOrWhiteSpace(Model?.Event?.Description))
+                                {
+                                    @Html.Raw(Model.Event.Description.Replace("\n", "<br />"))
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No event description available</span>
+                                }
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(Model?.Event?.EventName))
+                            {
+                                <div class="mt-2">
+                                    <small class="text-light-blue">Event name:</small>
+                                    <strong class="ms-2">@Model.Event.EventName</strong>
+                                </div>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-3 fw-semibold text-light-blue">
+                            Venue
+                        </dt>
+                        <dd class="col-sm-9">
+                            @if (!string.IsNullOrWhiteSpace(Model?.Venue?.ImageURL))
+                            {
+                                <div class="mb-3">
+                                    <img src="@Model.Venue.ImageURL"
+                                         alt="@(Model.Venue.VenueName ?? "Venue")"
+                                         class="img-fluid rounded shadow"
+                                         style="max-height: 280px; object-fit: cover; width: 100%;"
+                                         onerror="this.src='https://via.placeholder.com/800x280/1b263b/778da9?text=Image+Not+Found';">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="bg-medium-blue rounded d-flex align-items-center justify-content-center mb-3"
+                                     style="height: 180px;">
+                                    <i class="fas fa-image fa-4x text-light-blue opacity-50"></i>
+                                </div>
+                            }
+
+                            <div>
+                                <i class="fas fa-building me-2 text-highlight"></i>
+                                <strong>@(Model?.Venue?.VenueName ?? "—")</strong>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(Model?.Venue?.Location))
+                            {
+                                <div class="mt-1">
+                                    <i class="fas fa-map-marker-alt me-2 text-highlight"></i>
+                                    @Model.Venue.Location
+                                </div>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

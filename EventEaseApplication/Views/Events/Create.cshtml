@@ -1,0 +1,94 @@
+﻿@model EventEaseApplication.Models.Event
+
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center mt-5">
+        <div class="col-lg-8 col-md-10">
+
+            <!-- Card wrapper for the form -->
+            <div class="card bg-deep-blue border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-transparent border-bottom border-medium-blue py-4 px-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-1 fw-bold">Create New Event</h2>
+                            <p class="text-light-blue mb-0">Add your event details below</p>
+                        </div>
+                        <a asp-action="Index" class="btn btn-outline-light btn-sm px-3">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Events
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <!-- Event Name -->
+                        <div class="mb-4">
+                            <label asp-for="EventName" class="form-label fw-semibold text-light-blue"></label>
+                            <input asp-for="EventName" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
+                                   placeholder="e.g. Summer Music Festival 2026" />
+                            <div class="invalid-feedback">
+                                <span asp-validation-for="EventName"></span>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label fw-semibold text-light-blue"></label>
+                            <textarea asp-for="Description" class="form-control bg-dark-blue border-medium-blue text-white"
+                                      rows="5" placeholder="Describe your event..."></textarea>
+                            <div class="invalid-feedback">
+                                <span asp-validation-for="Description"></span>
+                            </div>
+                        </div>
+
+                        <!-- Event Date & Time -->
+                        <div class="mb-4">
+                            <label asp-for="EventDate" class="form-label fw-semibold text-light-blue"></label>
+                            <input asp-for="EventDate" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
+                                   type="datetime-local" />
+                            <div class="invalid-feedback">
+                                <span asp-validation-for="EventDate"></span>
+                            </div>
+                            <small class="text-light-blue mt-1 d-block">Select date and time of the event</small>
+                        </div>
+
+                        <!-- Event Type -->
+                        <div class="mb-5">
+                            <label asp-for="EventTypeID" class="form-label fw-semibold text-light-blue"></label>
+                            <select asp-for="EventTypeID" class="form-select form-select-lg bg-dark-blue border-medium-blue text-white"
+                                    asp-items="ViewBag.EventTypeID">
+                                <option value="">-- Select Event Type --</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                <span asp-validation-for="EventTypeID"></span>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="d-flex gap-3 flex-wrap">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill">
+                                <i class="fas fa-calendar-plus me-2"></i>Create Event
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-light btn-lg px-5 rounded-pill">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

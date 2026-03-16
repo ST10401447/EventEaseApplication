@@ -1,0 +1,97 @@
+﻿@model EventEaseApplication.Models.Booking
+
+@{
+    ViewData["Title"] = "Create Booking";
+}
+
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <div>
+                    <h1 class="mb-0 fw-bold">Create Booking</h1>
+                    <h5 class="text-light-blue mb-0">Add a new event booking</h5>
+                </div>
+                <a asp-action="Index" class="btn btn-outline-light px-4 rounded-pill">
+                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                </a>
+            </div>
+
+            <div class="card bg-deep-blue border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-transparent border-bottom border-medium-blue py-4 px-4">
+                    <h4 class="mb-0 fw-semibold text-highlight">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        New Booking
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4" role="alert"></div>
+
+                        <div class="row g-4">
+                            <!-- Start Date -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="StartDate" class="control-label fw-semibold text-light-blue"></label>
+                                    <input asp-for="StartDate" class="form-control bg-dark-blue text-accent border-medium-blue"
+                                           type="datetime-local" />
+                                    <span asp-validation-for="StartDate" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+
+                            <!-- End Date -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="EndDate" class="control-label fw-semibold text-light-blue"></label>
+                                    <input asp-for="EndDate" class="form-control bg-dark-blue text-accent border-medium-blue"
+                                           type="datetime-local" />
+                                    <span asp-validation-for="EndDate" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+
+                            <!-- Event -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="EventID" class="control-label fw-semibold text-light-blue"></label>
+                                    <select asp-for="EventID" class="form-control bg-dark-blue text-accent border-medium-blue"
+                                            asp-items="ViewBag.EventID">
+                                        <option value="">-- Select Event --</option>
+                                    </select>
+                                    <span asp-validation-for="EventID" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+
+                            <!-- Venue -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label asp-for="VenueID" class="control-label fw-semibold text-light-blue"></label>
+                                    <select asp-for="VenueID" class="form-control bg-dark-blue text-accent border-medium-blue"
+                                            asp-items="ViewBag.VenueID">
+                                        <option value="">-- Select Venue --</option>
+                                    </select>
+                                    <span asp-validation-for="VenueID" class="text-danger small mt-1"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 text-end">
+                            <button type="submit" class="btn btn-primary px-5 py-3 rounded-pill fw-semibold">
+                                <i class="fas fa-check-circle me-2"></i>Create Booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

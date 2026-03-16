@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "EventEase – Find & Book Perfect Venues";
+}
+
+<section class="hero-section text-center">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative">
+        <h1 class="display-3 fw-bold mb-4">Create Unforgettable Moments</h1>
+        <p class="lead fs-4 mb-5" style="max-width: 720px; margin: 0 auto;">
+            Discover beautiful venues, exciting events and book your perfect experience in just a few clicks.
+        </p>
+        <div class="d-flex justify-content-center gap-4 flex-wrap">
+            <a asp-controller="Venues" asp-action="Index" class="btn btn-primary btn-lg px-5">Explore Venues</a>
+            <a asp-controller="Events" asp-action="Index" class="btn btn-outline-light btn-lg px-5">Browse Events</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 py-md-5 bg-dark-blue">
+    <div class="container">
+        <h2 class="text-center mb-5 display-5 fw-bold">Why Choose EventEase?</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-search-location fa-4x mb-4" style="color: var(--highlight)"></i>
+                    <h4 class="card-title">Find the Perfect Venue</h4>
+                    <p class="card-text text-light-blue">Hundreds of handpicked venues — from intimate rooftops to grand ballrooms.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-calendar-check fa-4x mb-4" style="color: var(--highlight)"></i>
+                    <h4 class="card-title">Easy & Instant Booking</h4>
+                    <p class="card-text text-light-blue">Real-time availability, secure payments, instant confirmation.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <i class="fas fa-heart fa-4x mb-4" style="color: var(--highlight)"></i>
+                    <h4 class="card-title">Memorable Experiences</h4>
+                    <p class="card-text text-light-blue">Weddings, corporate events, parties — we help make them extraordinary.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-deep-blue">
+    <div class="container">
+        <h2 class="text-center mb-5 display-5 fw-bold">Popular Venues</h2>
+
+        <div class="row g-4">
+            <!-- You can make these dynamic later -->
+            <div class="col-md-4">
+                <div class="card">
+                    <img src="https://images.pexels.com/photos/534110/pexels-photo-534110.jpeg" class="card-img-top" alt="Rooftop Venue" style="height:220px; object-fit:cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Skyline Rooftop Lounge</h5>
+                        <p class="card-text text-light-blue">Capacity: 120 • Pretoria CBD</p>
+                        <a asp-controller="Venues" asp-action="Details" asp-route-id="1" class="btn btn-primary">View & Book</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Repeat for 2–3 more cards -->
+        </div>
+    </div>
+</section>
