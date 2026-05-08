@@ -9,15 +9,16 @@ namespace EventEaseApplication.Models
         [Key]
         public int EventID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Event Name is required")]
         public string EventName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Event Date is required")]
         public DateTime EventDate { get; set; }
 
+        [Required(ErrorMessage = "Please select an Event Type")]
         public int EventTypeID { get; set; }
 
         [ForeignKey(nameof(EventTypeID))]

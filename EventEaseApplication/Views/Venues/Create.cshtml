@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="card-body p-4 p-md-5">
-                    <form asp-action="Create">
+                    <form asp-action="Create" enctype="multipart/form-data" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-4 alert alert-danger" role="alert"></div>
 
                         <!-- Venue Name -->
@@ -53,18 +53,15 @@
 
                         <!-- Image URL -->
                         <div class="mb-4">
-                            <label asp-for="ImageURL" class="form-label fw-semibold text-light-blue"></label>
-                            <input asp-for="ImageURL" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
-                                   placeholder="https://example.com/venue-image.jpg" />
-                            <small class="form-text text-light-blue mt-1 d-block">
-                                Provide a direct link to a high-quality image of the venue
-                            </small>
-                            <span asp-validation-for="ImageURL" class="text-danger mt-1 d-block"></span>
+                            <label class="form-label">Event Image</label>
+                            <input type="file" name="ImageFile" accept="image/*" class="form-control" />
+                            <div class="form-text text-muted">
+                                Optional: Upload a cover image (jpg, png, max 5MB recommended)
+                            </div>
                         </div>
-
                         <!-- Venue Type -->
                         <div class="mb-5">
-                            <label asp-for="VenueTypeID" class="form-label fw-semibold text-light-blue"></label>
+                            <label asp-for="VenueType" class="form-label fw-semibold text-light-blue"></label>
                             <select asp-for="VenueTypeID" class="form-select form-select-lg bg-dark-blue border-medium-blue text-white"
                                     asp-items="ViewBag.VenueTypeID">
                                 <option value="">-- Select Venue Type --</option>

@@ -20,11 +20,54 @@ namespace EventEaseApplication.Controllers
         }
 
         // GET: Events
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Events.Include(e => e.EventType);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+            var allEvents = await _context.Events
+                .Include(e => e.EventType)
+                .ToListAsync();
+
+            // If search bar is empty → show all events
+            if (string.IsNullOrWhiteSpace(searchString))
+            {
+                return View(allEvents.OrderByDescending(e => e.EventDate).ToList());
+            }
+
+            // Manual filtering using loop
+            List<Event> filteredEvents = new List<Event>();
+            string searchLower = searchString.Trim().ToLower();
+
+            foreach (var item in allEvents)
+            {
+                bool isMatch = false;
+
+                // Search by Event Name
+                if (item.EventName != null && item.EventName.ToLower().Contains(searchLower))
+                {
+                    isMatch = true;
+                }
+                // Search by Description
+                else if (item.Description != null && item.Description.ToLower().Contains(searchLower))
+                {
+                    isMatch = true;
+                }
+                // Search by Event Type
+                else if (item.EventType?.EventTitle != null &&
+                         item.EventType.EventTitle.ToLower().Contains(searchLower))
+                {
+                    isMatch = true;
+                }
+
+                if (isMatch)
+                {
+                    filteredEvents.Add(item);
+                }
+            }
+
+            return View(filteredEvents.OrderByDescending(e => e.EventDate).ToList());
         }
+
 
         // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -133,9 +176,17 @@ namespace EventEaseApplication.Controllers
             var @event = await _context.Events
                 .Include(e => e.EventType)
                 .FirstOrDefaultAsync(m => m.EventID == id);
+
             if (@event == null)
             {
                 return NotFound();
+            }
+
+            // Prevent deletion of upcoming events
+            if (@event.EventDate > DateTime.Now)
+            {
+                TempData["ErrorMessage"] = "You cannot delete an upcoming event. Only past events can be deleted.";
+                return RedirectToAction(nameof(Index));
             }
 
             return View(@event);
@@ -147,12 +198,20 @@ namespace EventEaseApplication.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var @event = await _context.Events.FindAsync(id);
+
             if (@event != null)
             {
+                // Double protection to Prevent deletion of future events
+                if (@event.EventDate > DateTime.Now)
+                {
+                    TempData["ErrorMessage"] = "You cannot delete an upcoming event.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 _context.Events.Remove(@event);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

@@ -53,15 +53,13 @@
                             <span asp-validation-for="Capacity" class="text-danger mt-1 d-block"></span>
                         </div>
 
-                        <!-- Image URL -->
+                        <!-- New Image Upload -->
                         <div class="mb-4">
-                            <label asp-for="ImageURL" class="form-label fw-semibold text-light-blue"></label>
-                            <input asp-for="ImageURL" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
-                                   placeholder="https://example.com/venue-image.jpg" />
-                            <small class="form-text text-light-blue mt-1 d-block">
-                                Paste a direct link to the venue image (jpg, png, etc.)
-                            </small>
-                            <span asp-validation-for="ImageURL" class="text-danger mt-1 d-block"></span>
+                            <label class="form-label fw-semibold text-light-blue">New Venue Image (Optional)</label>
+                            <input type="file" name="ImageFile" accept="image/*" class="form-control" />
+                            <div class="form-text text-light-blue">
+                                Leave empty to keep the current image. (jpg, png, max 5MB recommended)
+                            </div>
                         </div>
 
                         <!-- Venue Type -->

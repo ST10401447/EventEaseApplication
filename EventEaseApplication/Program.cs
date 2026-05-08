@@ -1,4 +1,5 @@
 using EventEaseApplication.Data;
+using EventEaseApplication.Service;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventEaseApplication
@@ -15,6 +16,9 @@ namespace EventEaseApplication
             //Configuring the database connection string
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnectionString")));
+
+            // Register the BlobStorageService as a singleton
+            builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
 
             var app = builder.Build();
 

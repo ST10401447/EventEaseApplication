@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EventEaseApplication.Data;
 using EventEaseApplication.Models;
+using EventEaseApplication.Service;
 
 namespace EventEaseApplication.Controllers
 {
@@ -14,16 +15,63 @@ namespace EventEaseApplication.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public VenuesController(ApplicationDbContext context)
+        private readonly IBlobStorageService _blobStorageService;
+        public VenuesController(ApplicationDbContext context, IBlobStorageService blobStorageService)
         {
             _context = context;
+            _blobStorageService = blobStorageService;
         }
 
         // GET: Venues
-        public async Task<IActionResult> Index()
+
+       
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Venues.Include(v => v.VenueType);
-            return View(await applicationDbContext.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+            var allVenues = await _context.Venues
+                .Include(v => v.VenueType)
+                .ToListAsync();
+
+            // If search bar is empty → show all venues
+            if (string.IsNullOrWhiteSpace(searchString))
+            {
+                return View(allVenues.OrderBy(v => v.VenueName).ToList());
+            }
+
+            List<Venue> filteredVenues = new List<Venue>();
+            string search = searchString.Trim();
+
+            foreach (var venue in allVenues)
+            {
+                bool isMatch = false;
+
+                // Search by Venue Name
+                if (!string.IsNullOrEmpty(venue.VenueName) &&
+                    venue.VenueName.Contains(search, StringComparison.OrdinalIgnoreCase))
+                {
+                    isMatch = true;
+                }
+                // Search by Location
+                else if (!string.IsNullOrEmpty(venue.Location) &&
+                         venue.Location.Contains(search, StringComparison.OrdinalIgnoreCase))
+                {
+                    isMatch = true;
+                }
+                // STRICT CAPACITY SEARCH
+                else if (venue.Capacity.ToString() == search)        
+                {
+                    isMatch = true;
+                }
+               
+
+                if (isMatch)
+                {
+                    filteredVenues.Add(venue);
+                }
+            }
+
+            return View(filteredVenues.OrderBy(v => v.VenueName).ToList());
         }
 
         // GET: Venues/Details/5
@@ -57,10 +105,29 @@ namespace EventEaseApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID")] Venue venue)
+        public async Task<IActionResult> Create([Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID")] Venue venue, IFormFile ImageFile)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
+                string imageUrl = null;
+
+                // Handle file upload
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    try
+                    {
+                        imageUrl = await _blobStorageService.UploadFileAsync(ImageFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", $"Image upload failed: {ex.Message}");
+                        ViewBag.VenueTypeID = new SelectList(_context.VenueTypes, "VenueTypeID", "VenueTitle", venue.VenueTypeID);
+                        return View(venue);
+                    }
+                }
+
+                // Assign the URL to the model
+                venue.ImageURL = imageUrl;
                 _context.Add(venue);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -82,6 +149,7 @@ namespace EventEaseApplication.Controllers
             {
                 return NotFound();
             }
+
             ViewData["VenueTypeID"] = new SelectList(_context.VenueTypes, "VenueTypeID", "VenueTitle", venue.VenueTypeID);
             return View(venue);
         }
@@ -91,7 +159,8 @@ namespace EventEaseApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID")] Venue venue)
+        public async Task<IActionResult> Edit(int id, [Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID")] Venue venue,
+            IFormFile ImageFile)
         {
             if (id != venue.VenueID)
             {
@@ -100,6 +169,25 @@ namespace EventEaseApplication.Controllers
 
             if (ModelState.IsValid)
             {
+                string imageUrl = venue.ImageURL; 
+
+                // Handle new image upload
+                if (ImageFile != null && ImageFile.Length > 0)
+                {
+                    try
+                    {
+                        imageUrl = await _blobStorageService.UploadFileAsync(ImageFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", $"Image upload failed: {ex.Message}");
+                        ViewData["VenueTypeID"] = new SelectList(_context.VenueTypes, "VenueTypeID", "VenueTitle", venue.VenueTypeID);
+                        return View(venue);
+                    }
+                }
+
+                venue.ImageURL = imageUrl;
+
                 try
                 {
                     _context.Update(venue);
@@ -118,9 +206,11 @@ namespace EventEaseApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["VenueTypeID"] = new SelectList(_context.VenueTypes, "VenueTypeID", "VenueTitle", venue.VenueTypeID);
             return View(venue);
         }
+
 
         // GET: Venues/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -133,12 +223,24 @@ namespace EventEaseApplication.Controllers
             var venue = await _context.Venues
                 .Include(v => v.VenueType)
                 .FirstOrDefaultAsync(m => m.VenueID == id);
+
             if (venue == null)
             {
                 return NotFound();
             }
 
+            // Prevent deletion if venue has active or upcoming bookings
+            bool hasActiveBookings = await _context.Bookings
+                .AnyAsync(b => b.VenueID == id && b.StartDate >= DateTime.Now);
+
+            if (hasActiveBookings)
+            {
+                TempData["ErrorMessage"] = "You cannot delete this venue because it has active or upcoming bookings.";
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(venue);
+
         }
 
         // POST: Venues/Delete/5
@@ -147,12 +249,23 @@ namespace EventEaseApplication.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var venue = await _context.Venues.FindAsync(id);
+
             if (venue != null)
             {
+                // Double-check protection
+                bool hasActiveBookings = await _context.Bookings
+                    .AnyAsync(b => b.VenueID == id && b.StartDate >= DateTime.Now);
+
+                if (hasActiveBookings)
+                {
+                    TempData["ErrorMessage"] = "You cannot delete this venue because it has active or upcoming bookings.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 _context.Venues.Remove(venue);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -161,4 +274,5 @@ namespace EventEaseApplication.Controllers
             return _context.Venues.Any(e => e.VenueID == id);
         }
     }
+    
 }

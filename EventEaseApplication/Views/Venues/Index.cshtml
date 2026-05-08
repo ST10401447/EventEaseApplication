@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Venues Dashboard";
 
-    // Quick stats (ideally move calculations to controller/ViewModel)
+    // Quick stats 
     int totalVenues = Model.Count();
     int highCapacity = Model.Count(v => v.Capacity >= 150);
     var topTypes = Model
@@ -25,6 +25,17 @@
             <i class="fas fa-plus-circle me-2"></i>Add New Venue
         </a>
     </div>
+
+    <!--  Error Message -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Error:</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    
 
     <!-- Statistics Cards -->
     <div class="row g-4 mb-5">
@@ -76,11 +87,22 @@
     <div class="card bg-deep-blue border-0 shadow">
         <div class="card-header bg-transparent border-bottom border-medium-blue py-3 d-flex justify-content-between align-items-center">
             <h4 class="mb-0 fw-semibold">Your Venues</h4>
-            <div class="input-group" style="width: 280px;">
-                <input type="text" class="form-control bg-dark-blue border-medium-blue text-white" placeholder="Search venues...">
-                <span class="input-group-text bg-medium-blue border-medium-blue"><i class="fas fa-search"></i></span>
+                <!-- Search Bar -->
+                <form asp-action="Index" method="get" class="input-group" style="width: 280px;" id="searchForm">
+                    <input type="text"
+                           id="searchInput"
+                           name="searchString"
+                           class="form-control bg-dark-blue border-medium-blue text-white"
+                           placeholder="Search venues..."
+                           value="@ViewData["CurrentFilter"]" />
+                    <button class="input-group-text bg-medium-blue border-medium-blue text-white" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+  
             </div>
         </div>
+
 
         <div class="card-body p-4">
             @if (!Model.Any())
@@ -146,3 +168,17 @@
     </div>
 </div>
 
+<!-- Simple JavaScript - Student Style -->
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var searchInput = document.getElementById("searchInput");
+
+            searchInput.addEventListener("input", function () {
+                if (this.value.trim() === "") {
+                    window.location.href = "/Venues";
+                }
+            });
+        });
+    </script>
+}

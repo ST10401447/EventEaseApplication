@@ -1389,7 +1389,31 @@
                 background-color: rgba(119,141,169,0.12);
                 color: white;
             }
-        
+
+        /* ==================== ADDED: VALIDATION STYLES ==================== */
+        /* These styles make validation messages visible on dark background */
+        .text-danger {
+            color: #ff6b6b !important;
+        }
+
+        .alert-danger {
+            background-color: rgba(255, 107, 107, 0.15) !important;
+            border-color: rgba(255, 107, 107, 0.4) !important;
+            color: #ffcccc !important;
+        }
+
+        .invalid-feedback {
+            color: #ff6b6b;
+            display: block;
+        }
+
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #ff6b6b;
+        }
+        /* ================================================================ */
+
+
     </style>
 </head>
 <body>

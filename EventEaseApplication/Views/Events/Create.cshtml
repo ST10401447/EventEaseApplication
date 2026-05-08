@@ -24,7 +24,10 @@
 
                 <div class="card-body p-4 p-md-5">
                     <form asp-action="Create">
-                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <!-- Validation Summary  -->
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4 alert alert-danger" role="alert"></div>
+                       
 
                         <!-- Event Name -->
                         <div class="mb-4">
@@ -32,7 +35,10 @@
                             <input asp-for="EventName" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
                                    placeholder="e.g. Summer Music Festival 2026" />
                             <div class="invalid-feedback">
-                                <span asp-validation-for="EventName"></span>
+
+                                <!-- Field Validation  -->
+                                <span asp-validation-for="EventName" class="text-danger mt-1 d-block"></span>
+                               
                             </div>
                         </div>
 
@@ -42,7 +48,8 @@
                             <textarea asp-for="Description" class="form-control bg-dark-blue border-medium-blue text-white"
                                       rows="5" placeholder="Describe your event..."></textarea>
                             <div class="invalid-feedback">
-                                <span asp-validation-for="Description"></span>
+                                <span asp-validation-for="Description" class="text-danger mt-1 d-block"></span>
+                      
                             </div>
                         </div>
 
@@ -52,20 +59,24 @@
                             <input asp-for="EventDate" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
                                    type="datetime-local" />
                             <div class="invalid-feedback">
-                                <span asp-validation-for="EventDate"></span>
+                                <!-- Field Validation  -->
+                                <span asp-validation-for="EventDate" class="text-danger mt-1 d-block"></span>
+                        
                             </div>
                             <small class="text-light-blue mt-1 d-block">Select date and time of the event</small>
                         </div>
 
                         <!-- Event Type -->
                         <div class="mb-5">
-                            <label asp-for="EventTypeID" class="form-label fw-semibold text-light-blue"></label>
+                            <label asp-for="EventType" class="form-label fw-semibold text-light-blue"></label>
                             <select asp-for="EventTypeID" class="form-select form-select-lg bg-dark-blue border-medium-blue text-white"
                                     asp-items="ViewBag.EventTypeID">
                                 <option value="">-- Select Event Type --</option>
                             </select>
                             <div class="invalid-feedback">
-                                <span asp-validation-for="EventTypeID"></span>
+                                <!-- Field Validation -->
+                                <span asp-validation-for="EventTypeID" class="text-danger mt-1 d-block"></span>
+                                
                             </div>
                         </div>
 
