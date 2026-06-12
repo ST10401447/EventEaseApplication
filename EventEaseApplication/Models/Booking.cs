@@ -23,5 +23,7 @@ namespace EventEaseApplication.Models
 
         [ForeignKey(nameof(VenueID))]
         public Venue? Venue { get; set; }
+
+        public string Status { get; set; } = string.Empty;
     }
 }

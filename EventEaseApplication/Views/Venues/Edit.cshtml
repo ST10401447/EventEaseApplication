@@ -1,13 +1,10 @@
 ﻿@model EventEaseApplication.Models.Venue
-
 @{
     ViewData["Title"] = "Edit Venue";
 }
-
 <div class="container py-5 mt-5">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h1 class="mb-0 fw-bold">Edit Venue</h1>
                 <a asp-action="Index" class="btn btn-outline-light px-4 rounded-pill">
@@ -24,47 +21,64 @@
                 </div>
 
                 <div class="card-body p-4 p-md-5">
-                    <form asp-action="Edit">
+                    <form asp-action="Edit" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-4 alert alert-danger" role="alert"></div>
-
                         <input type="hidden" asp-for="VenueID" />
+
+                        <!-- Current Image Preview -->
+                        @if (!string.IsNullOrWhiteSpace(Model?.ImageURL))
+                        {
+                            <div class="mb-4 text-center">
+                                <p class="text-light-blue mb-2">Current Image:</p>
+                                <img src="@Model.ImageURL" alt="@Model.VenueName"
+                                     class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                            </div>
+                        }
 
                         <!-- Venue Name -->
                         <div class="mb-4">
                             <label asp-for="VenueName" class="form-label fw-semibold text-light-blue"></label>
-                            <input asp-for="VenueName" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
-                                   placeholder="e.g. Skyline Rooftop Lounge" />
+                            <input asp-for="VenueName" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white" />
                             <span asp-validation-for="VenueName" class="text-danger mt-1 d-block"></span>
                         </div>
 
                         <!-- Location -->
                         <div class="mb-4">
                             <label asp-for="Location" class="form-label fw-semibold text-light-blue"></label>
-                            <input asp-for="Location" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
-                                   placeholder="e.g. Sandton, Johannesburg" />
+                            <input asp-for="Location" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white" />
                             <span asp-validation-for="Location" class="text-danger mt-1 d-block"></span>
                         </div>
 
                         <!-- Capacity -->
                         <div class="mb-4">
                             <label asp-for="Capacity" class="form-label fw-semibold text-light-blue"></label>
-                            <input asp-for="Capacity" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white"
-                                   type="number" min="1" placeholder="Maximum number of guests" />
+                            <input asp-for="Capacity" class="form-control form-control-lg bg-dark-blue border-medium-blue text-white" type="number" min="1" />
                             <span asp-validation-for="Capacity" class="text-danger mt-1 d-block"></span>
                         </div>
 
-                        <!-- New Image Upload -->
+                        <!-- Availability -->
+                        <div class="mb-4">
+                            <label asp-for="Availability" class="form-label fw-semibold text-light-blue"></label>
+                            <select asp-for="Availability" class="form-select form-select-lg bg-dark-blue border-medium-blue text-white">
+                                <option value="">------ Select Availability ------</option>
+                                <option value="Available" selected="@(Model?.Availability == "Available")">Available</option>
+                                <option value="Unavailable" selected="@(Model?.Availability == "Unavailable")">Unavailable</option>
+                            </select>
+                            <span asp-validation-for="Availability" class="text-danger mt-1 d-block"></span>
+                        </div>
+
+                        <!-- Image Upload -->
                         <div class="mb-4">
                             <label class="form-label fw-semibold text-light-blue">New Venue Image (Optional)</label>
-                            <input type="file" name="ImageFile" accept="image/*" class="form-control" />
-                            <div class="form-text text-light-blue">
-                                Leave empty to keep the current image. (jpg, png, max 5MB recommended)
+                            <input type="file" name="ImageFile" accept="image/*" class="form-control bg-dark-blue border-medium-blue text-white" />
+                            <div class="form-text text-light-blue small">
+                                Leave empty to keep current image. (jpg, png, max 5MB)
                             </div>
                         </div>
 
                         <!-- Venue Type -->
                         <div class="mb-5">
-                            <label asp-for="VenueType" class="form-label fw-semibold text-light-blue"></label>
+                            <label asp-for="VenueTypeID" class="form-label fw-semibold text-light-blue"></label>
                             <select asp-for="VenueTypeID" class="form-select form-select-lg bg-dark-blue border-medium-blue text-white"
                                     asp-items="ViewBag.VenueTypeID">
                                 <option value="">-- Select Venue Type --</option>
@@ -72,7 +86,7 @@
                             <span asp-validation-for="VenueTypeID" class="text-danger mt-1 d-block"></span>
                         </div>
 
-                        <!-- Action Buttons -->
+                        <!-- Buttons -->
                         <div class="d-flex gap-3 flex-wrap">
                             <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill">
                                 <i class="fas fa-save me-2"></i>Save Changes
@@ -84,11 +98,9 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     @{

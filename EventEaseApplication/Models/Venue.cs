@@ -18,6 +18,10 @@ namespace EventEaseApplication.Models
         public int Capacity { get; set; }
 
         [Required]
+        public string Availability { get; set; } = string.Empty;
+
+
+        [Required]
         public string? ImageURL { get; set; }
 
         public int VenueTypeID { get; set; }

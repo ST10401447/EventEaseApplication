@@ -51,6 +51,17 @@
                             <span asp-validation-for="Capacity" class="text-danger mt-1 d-block"></span>
                         </div>
 
+                        <!-- Availability -->
+                        <div class="mb-4">
+                            <label asp-for="Availability" class="form-label fw-semibold text-light-blue"></label>
+                            <select asp-for="Availability" class="form-select form-select-lg bg-dark-blue border-medium-blue text-white">
+                                <option value="">------ Select Availability ------</option>
+                                <option value="Available">Available</option>
+                                <option value="Unavailable">Unavailable</option>
+                            </select>
+                            <span asp-validation-for="Availability" class="text-danger mt-1 d-block"></span>
+                        </div>
+
                         <!-- Image URL -->
                         <div class="mb-4">
                             <label class="form-label">Venue Image</label>

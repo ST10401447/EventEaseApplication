@@ -58,7 +58,7 @@ namespace EventEaseApplication.Controllers
                 {
                     isMatch = true;
                 }
-                // STRICT CAPACITY SEARCH
+                
                 else if (venue.Capacity.ToString() == search)        
                 {
                     isMatch = true;
@@ -105,7 +105,7 @@ namespace EventEaseApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID")] Venue venue, IFormFile ImageFile)
+        public async Task<IActionResult> Create([Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID,Availability")] Venue venue, IFormFile ImageFile)
         {
             if (!ModelState.IsValid)
             {
@@ -159,7 +159,7 @@ namespace EventEaseApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID")] Venue venue,
+        public async Task<IActionResult> Edit(int id, [Bind("VenueID,VenueName,Location,Capacity,ImageURL,VenueTypeID,Availability")] Venue venue,
             IFormFile ImageFile)
         {
             if (id != venue.VenueID)
@@ -169,7 +169,7 @@ namespace EventEaseApplication.Controllers
 
             if (ModelState.IsValid)
             {
-                string imageUrl = venue.ImageURL; 
+                string imageUrl = venue.ImageURL; // Keep old image by default
 
                 // Handle new image upload
                 if (ImageFile != null && ImageFile.Length > 0)
@@ -210,7 +210,6 @@ namespace EventEaseApplication.Controllers
             ViewData["VenueTypeID"] = new SelectList(_context.VenueTypes, "VenueTypeID", "VenueTitle", venue.VenueTypeID);
             return View(venue);
         }
-
 
         // GET: Venues/Delete/5
         public async Task<IActionResult> Delete(int? id)
